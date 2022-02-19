@@ -1,0 +1,16 @@
+[Unit]
+Description=Dero daemon
+After=syslog.target
+After=network.target
+
+[Service]
+RestartSec=2s
+Type=simple
+User={{ dero.user }}
+Group={{ dero.group }}
+WorkingDirectory={{ dero.datadir }}
+ExecStart={{ dero.basedir }}/dero_linux_amd64/derod-linux-amd64 --data-dir={{ dero.datadir }}
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,14 @@
+# -*- coding: utf-8 -*-
+# vim: ft=yaml
+#
+# Set default values.
+---
+values:
+  rootgroup: root
+  service:
+    name: derod
+  basedir: /opt/dero
+  datadir: /opt/dero/dero_linux_adm64/data
+  user: dero
+  group: dero
+...
