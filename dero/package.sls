@@ -5,6 +5,33 @@
 {%- from tplroot ~ "/map.jinja" import mapdata as dero with context -%}
 {%- from tplroot ~ "/libtofs.jinja" import files_switch %}
 
+# there is another pubkey, but this one is used for releases atm
+Dero release signing pubkey file is present:
+  file.managed:
+    - name: /tmp/dero/pubkey2.gpg
+    - source:
+      - https://raw.githubusercontent.com/deroproject/documentation/master/captainKEY2.asc
+      - salt://dero/files/captain2.pub
+    - skip_verify: true
+    - makedirs: true
+
+Dero release signing pubkey is imported:
+  module.run:
+    - gpg.import_key:
+      - filename: /tmp/dero/pubkey2.gpg
+    - unless:
+      - fun: gpg.get_key
+        fingerprint: DED1FEF44297A15CAD9AE28318CDB3ED5E85D2D4
+    - require:
+      - Dero release signing pubkey file is present
+
+Dero release signing pubkey is actually present:
+  module.run:
+    - gpg.get_key:
+      - fingerprint: DED1FEF44297A15CAD9AE28318CDB3ED5E85D2D4
+    - require:
+      - Dero release signing pubkey is imported
+
 Dero user/group is present:
   user.present:
     - name: {{ dero.user }}
@@ -18,16 +45,32 @@ Dero directory is present:
     - group: {{ dero.rootgroup }}
     - makedirs: true
 
+Dero release hashes are available:
+  file.managed:
+    - name: /tmp/dero/hashes.txt.asc
+    - source:
+      - https://github.com/deroproject/derohe/releases/download/Release50/checksum.txt.asc
+    - skip_verify: true
+
+Dero release hashes are signed by Dero pubkey:
+  module.run:
+    - gpg.verify:
+      - filename: /tmp/dero/hashes.txt.asc
+    - require:
+      - Dero release hashes are available
+      - Dero release signing pubkey is actually present
+
 Dero is available:
   archive.extracted:
     - name: {{ dero.basedir }}
     - source:
-      - https://github.com/deroproject/derosuite/releases/download/Version_P2P_bug_fix/dero_linux_amd64_2.2.1-0.Atlantis.Astrobwt+03072020.tar.gz
-    - source_hash: 4bedb328b806cc1f523e3610219ec48789092714da02e84755d665200ea78729
+      - https://github.com/deroproject/derohe/releases/download/Release50/dero_linux_amd64.tar.gz
+    - source_hash: /tmp/dero/hashes.txt.asc
     - user: {{ dero.user }}
     - group: {{ dero.group }}
     - require:
       - Dero directory is present
+      - Dero release hashes are signed by Dero pubkey
 
 Dero service is available:
   file.managed:
