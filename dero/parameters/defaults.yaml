@@ -4,6 +4,13 @@
 # Set default values.
 ---
 values:
+  pkg:
+    release: 66
+    required:
+      - gpg
+      - python-gnupg
+    source: https://github.com/deroproject/derohe/releases/download/Release{}/dero_linux_amd64.tar.gz
+    source_hash: https://github.com/deroproject/derohe/releases/download/Release{}/checksum.txt.asc
   rootgroup: root
   service:
     name: derod

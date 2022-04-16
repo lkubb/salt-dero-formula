@@ -5,6 +5,16 @@
 {%- from tplroot ~ "/map.jinja" import mapdata as dero with context -%}
 {%- from tplroot ~ "/libtofs.jinja" import files_switch %}
 
+Salt can manage GPG:
+  # make sure gpg and python-gpg are available
+  pkg.installed:
+    - pkgs: {{ dero.pkg.required | json }}
+  # needed to avoid exception when running gpg.get_key in unless below
+  cmd.run:
+    - name: gpg --list-keys
+    - unless:
+      - test -d /root/.gnupg
+
 # there is another pubkey, but this one is used for releases atm
 Dero release signing pubkey file is present:
   file.managed:
@@ -24,6 +34,7 @@ Dero release signing pubkey is imported:
         fingerprint: DED1FEF44297A15CAD9AE28318CDB3ED5E85D2D4
     - require:
       - Dero release signing pubkey file is present
+      - Salt can manage GPG
 
 Dero release signing pubkey is actually present:
   module.run:
@@ -48,8 +59,7 @@ Dero directory is present:
 Dero release hashes are available:
   file.managed:
     - name: /tmp/dero/hashes.txt.asc
-    - source:
-      - https://github.com/deroproject/derohe/releases/download/Release50/checksum.txt.asc
+    - source: {{ dero.pkg.source_hash.format(dero.pkg.release) }}
     - skip_verify: true
 
 Dero release hashes are signed by Dero pubkey:
@@ -63,8 +73,7 @@ Dero release hashes are signed by Dero pubkey:
 Dero is available:
   archive.extracted:
     - name: {{ dero.basedir }}
-    - source:
-      - https://github.com/deroproject/derohe/releases/download/Release50/dero_linux_amd64.tar.gz
+    - source: {{ dero.pkg.source.format(dero.pkg.release) }}
     - source_hash: /tmp/dero/hashes.txt.asc
     - user: {{ dero.user }}
     - group: {{ dero.group }}
@@ -72,6 +81,7 @@ Dero is available:
       - Dero directory is present
       - Dero release hashes are signed by Dero pubkey
 
+# this currently assumes systemd @FIXME
 Dero service is available:
   file.managed:
     - name: /etc/systemd/system/{{ dero.service.name }}.service

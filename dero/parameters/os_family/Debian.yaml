@@ -1,0 +1,9 @@
+# -*- coding: utf-8 -*-
+# vim: ft=yaml
+---
+values:
+  pkg:
+    required:
+      - gpg
+      - python3-gnupg
+...

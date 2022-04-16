@@ -1,0 +1,11 @@
+# -*- coding: utf-8 -*-
+# vim: ft=yaml
+# This is untested currently.
+---
+values:
+  pkg:
+    required:
+      - gpg2
+      - py-gnupg
+    source: https://github.com/deroproject/derohe/releases/download/Release{}/dero_freebsd_amd64.tar.gz
+...
