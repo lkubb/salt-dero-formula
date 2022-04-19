@@ -4,6 +4,7 @@
 ---
 values:
   pkg:
+    name: derod-freebsd-amd64
     required:
       - gpg2
       - py-gnupg

@@ -5,6 +5,8 @@
 ---
 values:
   pkg:
+    name: dero-linux-amd64
+    daemon: derod-linux-amd64
     release: 66
     required:
       - gpg
@@ -15,7 +17,7 @@ values:
   service:
     name: derod
   basedir: /opt/dero
-  datadir: /opt/dero/dero_linux_adm64/data
+  datadir: /opt/dero/data
   user: dero
   group: dero
 ...

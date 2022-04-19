@@ -9,7 +9,7 @@ Type=simple
 User={{ dero.user }}
 Group={{ dero.group }}
 WorkingDirectory={{ dero.datadir }}
-ExecStart={{ dero.basedir }}/dero_linux_amd64/derod-linux-amd64 --data-dir={{ dero.datadir }}
+ExecStart={{ dero.basedir | path_join(dero.pkg.release | string, dero.pkg.daemon) }} --data-dir={{ dero.datadir }}
 Restart=always
 
 [Install]

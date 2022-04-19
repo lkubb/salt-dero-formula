@@ -72,12 +72,16 @@ Dero release hashes are signed by Dero pubkey:
 
 Dero is available:
   archive.extracted:
-    - name: {{ dero.basedir }}
+    - name: {{ dero.basedir | path_join(dero.pkg.release | string) }}
     - source: {{ dero.pkg.source.format(dero.pkg.release) }}
     - source_hash: /tmp/dero/hashes.txt.asc
-    - source_hash_name: 'SHA512 (dero_linux_amd64.tar.gz) ='
+    - source_hash_name: 'SHA512 ({{ dero.pkg.name }}.tar.gz) ='
     - user: {{ dero.user }}
     - group: {{ dero.group }}
+    # 2 levels are needed to just dump the files
+    - options: --strip-components=2
+    # this is needed because of the above
+    - enforce_toplevel: false
     - require:
       - Dero directory is present
       - Dero release hashes are signed by Dero pubkey
