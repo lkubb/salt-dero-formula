@@ -104,3 +104,7 @@ Dero datadir is available:
     - user: {{ dero.user }}
     - group: {{ dero.group }}
     - makedirs: true
+    # do not report failure when the data dir is a mount (permissions)
+    - unless:
+      - fun: mount.is_mounted
+        name: {{ dero.datadir }}
