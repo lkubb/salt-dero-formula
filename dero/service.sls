@@ -7,6 +7,7 @@
 Dero service is running:
   service.running:
     - name: {{ dero.service.name }}
+    - enable: true
 
 
 # DERO : A secure, private blockchain with smart-contracts
