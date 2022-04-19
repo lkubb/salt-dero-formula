@@ -75,6 +75,7 @@ Dero is available:
     - name: {{ dero.basedir }}
     - source: {{ dero.pkg.source.format(dero.pkg.release) }}
     - source_hash: /tmp/dero/hashes.txt.asc
+    - source_hash_name: 'SHA512 (dero_linux_amd64.tar.gz) ='
     - user: {{ dero.user }}
     - group: {{ dero.group }}
     - require:
