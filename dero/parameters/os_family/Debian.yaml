@@ -2,8 +2,10 @@
 # vim: ft=yaml
 ---
 values:
-  pkg:
-    required:
-      - gpg
-      - python3-gnupg
+  lookup:
+    pkg_manager: apt
+    pkg:
+      required:
+        - gpg
+        - python3-gnupg
 ...

@@ -2,5 +2,5 @@
 # vim: ft=sls
 
 include:
-  - .package
-  - .service
+  - .service.clean
+  - .package.clean

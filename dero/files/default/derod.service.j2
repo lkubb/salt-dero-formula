@@ -2,14 +2,17 @@
 Description=Dero daemon
 After=syslog.target
 After=network.target
+{%- if dero.datadir_requires_mount %}
+RequiresMountFor={{ dero.lookup.datadir }}
+{%- endif %}
 
 [Service]
 RestartSec=2s
 Type=simple
-User={{ dero.user }}
-Group={{ dero.group }}
-WorkingDirectory={{ dero.datadir }}
-ExecStart={{ dero.basedir | path_join(dero.pkg.release | string, dero.pkg.daemon) }} --data-dir={{ dero.datadir }}
+User={{ dero.lookup.user }}
+Group={{ dero.lookup.group }}
+WorkingDirectory={{ dero.lookup.datadir }}
+ExecStart={{ dero.lookup.basedir | path_join(dero.release | string, dero.lookup.pkg.daemon) }} --data-dir={{ dero.lookup.datadir }}
 Restart=always
 
 [Install]

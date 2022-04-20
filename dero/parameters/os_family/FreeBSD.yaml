@@ -1,12 +1,18 @@
 # -*- coding: utf-8 -*-
 # vim: ft=yaml
-# This is untested currently.
 ---
 values:
-  pkg:
-    name: derod-freebsd-amd64
-    required:
-      - gpg2
-      - py-gnupg
-    source: https://github.com/deroproject/derohe/releases/download/Release{}/dero_freebsd_amd64.tar.gz
+  lookup:
+    pkg_manager: pkg
+    rootgroup: wheel
+    pkg:
+      daemon: derod-freebsd-amd64
+      explorer: explorer-freebsd-amd64
+      miner: dero-miner-freebsd-amd64
+      name: dero-freebsd-amd64
+      required:
+        - gpg2
+        - py-gnupg
+      simulator: simulator-freebsd-amd64
+      wallet: dero-wallet-cli-freebsd-amd64
 ...

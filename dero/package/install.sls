@@ -1,18 +1,20 @@
 # -*- coding: utf-8 -*-
 # vim: ft=sls
 
-{%- set tplroot = tpldir.split('/')[0] -%}
-{%- from tplroot ~ "/map.jinja" import mapdata as dero with context -%}
-{%- from tplroot ~ "/libtofs.jinja" import files_switch %}
+{%- set tplroot = tpldir.split('/')[0] %}
+{%- from tplroot ~ "/map.jinja" import mapdata as dero with context %}
+{%- from tplroot ~ "/libtofs.jinja" import files_switch with context %}
 
 Salt can manage GPG:
   # make sure gpg and python-gpg are available
   pkg.installed:
-    - pkgs: {{ dero.pkg.required | json }}
+    - pkgs: {{ dero.lookup.pkg.required | json }}
   # needed to avoid exception when running gpg.get_key in unless below
   cmd.run:
     - name: gpg --list-keys
     - unless:
+      - test -d "${GNUPG_HOME:-$HOME/.gnupg}"
+      # the above does not work somehow
       - test -d /root/.gnupg
 
 # there is another pubkey, but this one is used for releases atm
@@ -21,8 +23,8 @@ Dero release signing pubkey file is present:
     - name: /tmp/dero/pubkey2.gpg
     - source:
       - https://raw.githubusercontent.com/deroproject/documentation/master/captainKEY2.asc
-      - salt://dero/files/captain2.pub
-    - skip_verify: true
+      - salt://dero/files/default/captain2.pub
+    - source_hash: be43b6934f4414f1b237b865f33a55d449fd211ef2f4e395cde87167392058ba
     - makedirs: true
 
 Dero release signing pubkey is imported:
@@ -45,21 +47,21 @@ Dero release signing pubkey is actually present:
 
 Dero user/group is present:
   user.present:
-    - name: {{ dero.user }}
+    - name: {{ dero.lookup.user }}
     - system: true
     - usergroup: true
 
 Dero directory is present:
   file.directory:
-    - name: {{ dero.basedir }}
+    - name: {{ dero.lookup.basedir }}
     - user: root
-    - group: {{ dero.rootgroup }}
+    - group: {{ dero.lookup.rootgroup }}
     - makedirs: true
 
 Dero release hashes are available:
   file.managed:
     - name: /tmp/dero/hashes.txt.asc
-    - source: {{ dero.pkg.source_hash.format(dero.pkg.release) }}
+    - source: {{ dero.lookup.pkg.source_hash.format(dero.release) }}
     - skip_verify: true
 
 Dero release hashes are signed by Dero pubkey:
@@ -70,14 +72,14 @@ Dero release hashes are signed by Dero pubkey:
       - Dero release hashes are available
       - Dero release signing pubkey is actually present
 
-Dero is available:
+Dero is installed:
   archive.extracted:
-    - name: {{ dero.basedir | path_join(dero.pkg.release | string) }}
-    - source: {{ dero.pkg.source.format(dero.pkg.release) }}
+    - name: {{ dero.lookup.basedir | path_join(dero.release | string) }}
+    - source: {{ dero.lookup.pkg.source.format(dero.release, dero.lookup.pkg.name | replace('-', '_')) }}
     - source_hash: /tmp/dero/hashes.txt.asc
-    - source_hash_name: 'SHA512 ({{ dero.pkg.name }}.tar.gz) ='
-    - user: {{ dero.user }}
-    - group: {{ dero.group }}
+    - source_hash_name: 'SHA512 ({{ dero.lookup.pkg.name | replace('-', '_') }}.tar.gz) ='
+    - user: {{ dero.lookup.user }}
+    - group: {{ dero.lookup.group }}
     # 2 levels are needed to just dump the files
     - options: --strip-components=2
     # this is needed because of the above
@@ -87,24 +89,26 @@ Dero is available:
       - Dero release hashes are signed by Dero pubkey
 
 # this currently assumes systemd @FIXME
-Dero service is available:
+Dero service unit is installed:
   file.managed:
-    - name: /etc/systemd/system/{{ dero.service.name }}.service
+    - name: /etc/systemd/system/{{ dero.lookup.service.name }}.service
     - source: {{ files_switch(['derod.service', 'derod.service.j2']) }}
     - template: jinja
     - mode: '0644'
     - user: root
-    - group: {{ dero.rootgroup }}
+    - group: {{ dero.lookup.rootgroup }}
     - makedirs: true
     - context: {{ {'dero': dero} | json }}
 
 Dero datadir is available:
   file.directory:
-    - name: {{ dero.datadir }}
-    - user: {{ dero.user }}
-    - group: {{ dero.group }}
+    - name: {{ dero.lookup.datadir }}
+    - user: {{ dero.lookup.user }}
+    - group: {{ dero.lookup.group }}
     - makedirs: true
+{%- if dero.datadir_requires_mount %}
     # do not report failure when the data dir is a mount (permissions)
     - unless:
       - fun: mount.is_mounted
-        name: {{ dero.datadir }}
+        name: {{ dero.lookup.datadir }}
+{%- endif %}

@@ -1,0 +1,56 @@
+{
+  "template": "https://github.com/lkubb/salt-template-formula",
+  "commit": "7dea11a9bc3cb4827bc8fda80a30271353ab3e09",
+  "checkout": null,
+  "context": {
+    "cookiecutter": {
+      "_extensions": [
+        "local_extensions.YAMLDumper"
+      ],
+      "_jinja2_env_vars": {
+        "block_start_string": "{!",
+        "block_end_string": "!}",
+        "variable_start_string": "{=",
+        "variable_end_string": "=}",
+        "comment_start_string": "{@",
+        "comment_end_string": "@}"
+      },
+      "name": "Dero",
+      "abbr": "dero",
+      "abbr_pysafe": "dero",
+      "pkg": "",
+      "needs_repo": "",
+      "config": "",
+      "service": "derod",
+      "subcomponent": "",
+      "subcomponent_config": "",
+      "git_username": "lkubb",
+      "_lookup": {
+        "basedir": "/opt/dero",
+        "datadir": "/opt/dero/data",
+        "user": "dero",
+        "group": "dero",
+        "pkg": {
+          "name": "dero-linux-amd64",
+          "daemon": "derod-linux-amd64",
+          "miner": "dero-miner-linux-amd64",
+          "wallet": "dero-wallet-cli-linux-amd64",
+          "explorer": "explorer-linux-amd64",
+          "simulator": "simulator-linux-amd64",
+          "required": [
+            "gpg",
+            "python-gnupg"
+          ],
+          "source": "https://github.com/deroproject/derohe/releases/download/Release{}/{}.tar.gz",
+          "source_hash": "https://github.com/deroproject/derohe/releases/download/Release{}/checksum.txt.asc"
+        }
+      },
+      "_settings": {
+        "datadir_requires_mount": false,
+        "release": 66
+      },
+      "_template": "https://github.com/lkubb/salt-template-formula"
+    }
+  },
+  "directory": null
+}

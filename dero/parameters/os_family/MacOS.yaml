@@ -1,0 +1,27 @@
+# -*- coding: utf-8 -*-
+# vim: ft=yaml
+#
+# Set values specific to:
+#   salt['config.get']('os_family') == MacOS.
+#
+# You just need to add the key:values for this `os_family` that differ
+# from `defaults.yaml` + `<osarch>.yaml`.
+#
+# If you do not need to provide defaults via the `os_family` config,
+# you can remove this file or provide at least an empty dict, e.g.
+# values: {}
+---
+values:
+  lookup:
+    pkg_manager: brew
+    rootgroup: wheel
+    pkg:
+      daemon: derod-darwin
+      explorer: explorer-darwin
+      miner: dero-miner-darwin
+      name: dero_darwin_universal
+      required:
+        - gpg
+      simulator: simulator-darwin
+      wallet: dero-wallet-cli-darwin
+...
