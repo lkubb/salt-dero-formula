@@ -4,12 +4,17 @@
 ---
 dero:
 
-  datadir_requires_mount: false
+  config:
+    clog-level: 1
+    debug: false
   release: 66
+  service:
+    requires_mount: []
+    wants: []
 
   lookup:
     basedir: /opt/dero
-    datadir: /opt/dero/data
+    datadir: /var/lib/derod
     group: dero
     pkg:
       daemon: derod-linux-amd64

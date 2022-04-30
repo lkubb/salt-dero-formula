@@ -106,9 +106,10 @@ Dero datadir is available:
     - user: {{ dero.lookup.user }}
     - group: {{ dero.lookup.group }}
     - makedirs: true
-{%- if dero.datadir_requires_mount %}
-    # do not report failure when the data dir is a mount (permissions)
     - unless:
-      - fun: mount.is_mounted
-        name: {{ dero.lookup.datadir }}
-{%- endif %}
+      # Check if path is somewhere on network share, might not be able to ensure ownership.
+      # @TODO proper check/config
+      - >-
+          test -d '{{ dero.lookup.datadir }}' &&
+          df -P '{{ dero.lookup.datadir }}' |
+          awk 'BEGIN {e=1} $NF ~ /^\/.+/ { e=0 ; print $1 ; exit } END { exit e }'

@@ -10,7 +10,7 @@ dero:
     service:
       name: derod
     basedir: /opt/dero
-    datadir: /opt/dero/data
+    datadir: /var/lib/derod
     group: dero
     pkg:
       daemon: derod-linux-amd64
@@ -25,8 +25,13 @@ dero:
       source_hash: https://github.com/deroproject/derohe/releases/download/Release{}/checksum.txt.asc
       wallet: dero-wallet-cli-linux-amd64
     user: dero
-  datadir_requires_mount: false
+  config:
+    clog-level: 1
+    debug: false
   release: 66
+  service:
+    requires_mount: []
+    wants: []
 
   tofs:
     # The files_switch key serves as a selector for alternative

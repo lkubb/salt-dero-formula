@@ -1,19 +1,135 @@
+# This file is managed by Salt.
+# Manual changes might be overwritten.
+
 [Unit]
 Description=Dero daemon
-After=syslog.target
-After=network.target
-{%- if dero.datadir_requires_mount %}
-RequiresMountFor={{ dero.lookup.datadir }}
+Documentation=https://docs.dero.io/
+
+After=network-online.target
+Wants=network-online.target
+
+{%- if dero.service.wants %}
+{%-   for wanted in dero.service.wants %}
+Wants={{ wanted }}.service
+After={{ wanted }}.service
+{%-   endfor %}
+{%- endif %}
+{%- if dero.service.requires_mount %}
+{%-   for mount in dero.service.requires_mount %}
+RequiresMountsFor={{ mount }}
+{%-   endfor %}
 {%- endif %}
 
 [Service]
-RestartSec=2s
+ExecStart={{ dero.lookup.basedir | path_join(dero.release | string, dero.lookup.pkg.daemon) }}{% if dero._flags or dero._params %} \{% endif %}
+{%- for flag in dero._flags %}
+                --{{ flag }}{% if not loop.last or dero._opts %} \{% endif %}
+{%- endfor %}
+{%- for opt, val in dero._params.items() %}
+                --{{ opt }} '{{ val }}'{% if not loop.last %} \{% endif %}
+{%- endfor %}
+
+# Process management
+####################
+
 Type=simple
+Restart=on-failure
+RestartSec=2s
+
+# Directory creation and permissions
+####################################
+
 User={{ dero.lookup.user }}
 Group={{ dero.lookup.group }}
-WorkingDirectory={{ dero.lookup.datadir }}
-ExecStart={{ dero.lookup.basedir | path_join(dero.release | string, dero.lookup.pkg.daemon) }} --data-dir={{ dero.lookup.datadir }}
-Restart=always
+
+ReadWritePaths={{ dero.lookup.datadir }}
+
+# Hardening measures
+####################
+
+# Provide a private /tmp and /var/tmp.
+PrivateTmp=true
+
+# Mount everything but /dev/, /proc/ and /sys/ read-only for the process.
+ProtectSystem=strict
+
+# Deny access to /home, /root and /run/user
+ProtectHome=true
+
+# Disallow the process and all of its children to gain
+# new privileges through execve().
+NoNewPrivileges=true
+
+# Use a new /dev namespace only populated with API pseudo devices
+# such as /dev/null, /dev/zero and /dev/random.
+PrivateDevices=true
+
+# Deny the creation of writable and executable memory mappings.
+MemoryDenyWriteExecute=true
+
+# Make /proc/sys/, /sys/, /proc/sysrq-trigger, /proc/latency_stats, /proc/acpi,
+# /proc/timer_stats, /proc/fs and /proc/irq read-only.
+ProtectKernelTunables=true
+
+# Deny explicit kernel module loading.
+ProtectKernelModules=true
+
+# Deny access to the kernel log ring buffer.
+ProtectKernelLogs=true
+
+# Deny writes to the hardware clock or system clock.
+ProtectClock=true
+
+# Hide processes owned by other users from /proc/.
+ProtectProc=invisible
+
+# Hide all files and directories not directly associated with process management
+# and introspection in the /proc/ file system configured for the unit's processes.
+ProcSubset=pid
+
+# Deny write access to cgroups hierarchies accessible through /sys/fs/cgroup/.
+ProtectControlGroups=true
+
+# Restrict the set of accessible socket address families to those listed.
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+
+# Deny access to any kind of namespacing.
+RestrictNamespaces=true
+
+# Deny changing the kernel execution domain.
+LockPersonality=true
+
+# This can be used to deny access to specific IP addresses.
+# `any` blocks all.
+# IPAddressDeny=any
+
+# Set up up a new user namespace for the executed processes and
+# configure a minimal user and group mapping.
+PrivateUsers=true
+
+# Deny setting suid/sgid bits.
+RestrictSUIDSGID=true
+
+# Remove all System V and POSIX IPC objects owned by user/group on stop.
+RemoveIPC=true
+
+# Deny any attempts to enable realtime scheduling. (prevent DoS)
+RestrictRealtime=true
+
+# Set up a new UTS namespace and prevent changing hostname/domainname.
+ProtectHostname=true
+
+# Empty capability bounding set.
+CapabilityBoundingSet=
+
+# Allow system calls used by common system services.
+SystemCallFilter=@system-service
+# Explicitly deny system calls listed in the docker seccomp blacklist,
+# except for "clone", which is a core requirement for systemd services.
+SystemCallFilter=~add_key clone3 kcmp keyctl mbind move_pages name_to_handle_at personality process_vm_readv process_vm_writev request_key set_mempolicy setns unshare userfaultfd
+
+# Only permit native system calls.
+SystemCallArchitectures=native
 
 [Install]
 WantedBy=multi-user.target

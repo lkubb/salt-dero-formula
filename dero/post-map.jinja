@@ -1,0 +1,27 @@
+{#- -*- coding: utf-8 -*- #}
+{#- vim: ft=jinja #}
+
+{#- Ensure the data dir is honored. -#}
+{%- do mapdata.config.update({"data-dir": mapdata.lookup.datadir}) -%}
+
+{#- Parse flags and parameters, they will need different handling. -#}
+{%- set flags = [] -%}
+{%- for flag in  ["testnet", "debug", "fastsync", "timeisinsync", "sync-node"] -%}
+  {%- if mapdata.config.get(flag, false) -%}
+    {%- do flags.append(flag) -%}
+  {%- endif -%}
+{%- endfor -%}
+
+{%- set params = {} -%}
+{%- for param in [
+        "clog-level", "flog-level", "socks-proxy", "data-dir", "rpc-bind", "p2p-bind",
+        "getwork-bind", "add-exclusive-node", "add-priority-node", "node-tag", "min-peers",
+        "max-peers", "prune-history", "integrator-address"
+    ]
+-%}
+  {%- if mapdata.config[param] is defined -%}
+    {%- do params.update({param: mapdata.config[param]}) -%}
+  {%- endif -%}
+{%- endfor -%}
+
+{%- do mapdata.update({"_flags": flags, "_params": params}) -%}

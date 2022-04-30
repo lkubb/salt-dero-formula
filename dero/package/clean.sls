@@ -12,6 +12,7 @@ Dero service unit is absent:
   file.absent:
     - name: /etc/systemd/system/{{ dero.lookup.service.name }}.service
 
+# This leaves the data behind to avoid accidental loss.
 Dero is removed:
   file.absent:
     - name: {{ dero.basedir | path_join(dero.lookup.pkg.release | string) }}

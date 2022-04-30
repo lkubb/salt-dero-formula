@@ -27,7 +27,7 @@
       "git_username": "lkubb",
       "_lookup": {
         "basedir": "/opt/dero",
-        "datadir": "/opt/dero/data",
+        "datadir": "/var/lib/derod",
         "user": "dero",
         "group": "dero",
         "pkg": {
@@ -46,8 +46,15 @@
         }
       },
       "_settings": {
-        "datadir_requires_mount": false,
-        "release": 66
+        "config": {
+          "clog-level": 1,
+          "debug": false
+        },
+        "release": 66,
+        "service": {
+          "requires_mount": [],
+          "wants": []
+        }
       },
       "_template": "https://github.com/lkubb/salt-template-formula"
     }
