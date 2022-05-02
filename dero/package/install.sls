@@ -53,7 +53,7 @@ Dero user/group is present:
 
 Dero directory is present:
   file.directory:
-    - name: {{ dero.lookup.basedir }}
+    - name: {{ dero.lookup.paths.bin }}
     - user: root
     - group: {{ dero.lookup.rootgroup }}
     - makedirs: true
@@ -74,7 +74,7 @@ Dero release hashes are signed by Dero pubkey:
 
 Dero is installed:
   archive.extracted:
-    - name: {{ dero.lookup.basedir | path_join(dero.release | string) }}
+    - name: {{ dero.lookup.paths.bin | path_join(dero.release | string) }}
     - source: {{ dero.lookup.pkg.source.format(dero.release, dero.lookup.pkg.name | replace('-', '_')) }}
     - source_hash: /tmp/dero/hashes.txt.asc
     - source_hash_name: 'SHA512 ({{ dero.lookup.pkg.name | replace('-', '_') }}.tar.gz) ='
@@ -102,7 +102,7 @@ Dero service unit is installed:
 
 Dero datadir is available:
   file.directory:
-    - name: {{ dero.lookup.datadir }}
+    - name: {{ dero.lookup.paths.data }}
     - user: {{ dero.lookup.user }}
     - group: {{ dero.lookup.group }}
     - makedirs: true
@@ -110,6 +110,6 @@ Dero datadir is available:
       # Check if path is somewhere on network share, might not be able to ensure ownership.
       # @TODO proper check/config
       - >-
-          test -d '{{ dero.lookup.datadir }}' &&
-          df -P '{{ dero.lookup.datadir }}' |
+          test -d '{{ dero.lookup.paths.data }}' &&
+          df -P '{{ dero.lookup.paths.data }}' |
           awk 'BEGIN {e=1} $NF ~ /^\/.+/ { e=0 ; print $1 ; exit } END { exit e }'

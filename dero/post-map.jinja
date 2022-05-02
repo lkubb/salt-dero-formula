@@ -2,7 +2,7 @@
 {#- vim: ft=jinja #}
 
 {#- Ensure the data dir is honored. -#}
-{%- do mapdata.config.update({"data-dir": mapdata.lookup.datadir}) -%}
+{%- do mapdata.config.update({"data-dir": mapdata.lookup.paths.data}) -%}
 
 {#- Parse flags and parameters, they will need different handling. -#}
 {%- set flags = [] -%}

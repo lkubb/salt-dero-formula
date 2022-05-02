@@ -21,7 +21,10 @@ RequiresMountsFor={{ mount }}
 {%- endif %}
 
 [Service]
-ExecStart={{ dero.lookup.basedir | path_join(dero.release | string, dero.lookup.pkg.daemon) }}{% if dero._flags or dero._params %} \{% endif %}
+# This is where the log file is placed. There is no parameter
+# to target it anywhere else currently.
+WorkingDirectory={{ dero.lookup.paths.working }}
+ExecStart={{ dero.lookup.paths.bin | path_join(dero.release | string, dero.lookup.pkg.daemon) }}{% if dero._flags or dero._params %} \{% endif %}
 {%- for flag in dero._flags %}
                 --{{ flag }}{% if not loop.last or dero._opts %} \{% endif %}
 {%- endfor %}
@@ -42,7 +45,7 @@ RestartSec=2s
 User={{ dero.lookup.user }}
 Group={{ dero.lookup.group }}
 
-ReadWritePaths={{ dero.lookup.datadir }}
+ReadWritePaths={{ dero.lookup.paths.data }}{% if dero.lookup.paths.working != dero.lookup.paths.data %}{{ dero.lookup.paths.working }}{% endif %}
 
 # Hardening measures
 ####################

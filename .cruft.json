@@ -26,8 +26,11 @@
       "subcomponent_config": "",
       "git_username": "lkubb",
       "_lookup": {
-        "basedir": "/opt/dero",
-        "datadir": "/var/lib/derod",
+        "paths": {
+          "bin": "/opt/dero",
+          "data": "/var/lib/derod",
+          "working": "/var/lib/derod"
+        },
         "user": "dero",
         "group": "dero",
         "pkg": {

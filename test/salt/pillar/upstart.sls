@@ -9,9 +9,11 @@ dero:
     added_in_lookup: lookup_value
     service:
       name: derod
-    basedir: /opt/dero
-    datadir: /var/lib/derod
     group: dero
+    paths:
+      bin: /opt/dero
+      data: /var/lib/derod
+      working: /var/lib/derod
     pkg:
       daemon: derod-linux-amd64
       explorer: explorer-linux-amd64

@@ -15,4 +15,4 @@ Dero service unit is absent:
 # This leaves the data behind to avoid accidental loss.
 Dero is removed:
   file.absent:
-    - name: {{ dero.basedir | path_join(dero.lookup.pkg.release | string) }}
+    - name: {{ dero.lookup.paths.bin | path_join(dero.lookup.pkg.release | string) }}
