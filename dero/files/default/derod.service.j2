@@ -21,8 +21,9 @@ RequiresMountsFor={{ mount }}
 {%- endif %}
 
 [Service]
-# This is where the log file is placed. There is no parameter
-# to target it anywhere else currently.
+# This is unused actually. I assumed this would be where the
+# log file is placed, but it is always next to the binary.
+# There is currently no parameter to target it somewhere else.
 WorkingDirectory={{ dero.lookup.paths.working }}
 ExecStart={{ dero.lookup.paths.bin | path_join(dero.release | string, dero.lookup.pkg.daemon) }}{% if dero._flags or dero._params %} \{% endif %}
 {%- for flag in dero._flags %}
@@ -45,7 +46,8 @@ RestartSec=2s
 User={{ dero.lookup.user }}
 Group={{ dero.lookup.group }}
 
-ReadWritePaths={{ dero.lookup.paths.data }}{% if dero.lookup.paths.working != dero.lookup.paths.data %} {{ dero.lookup.paths.working }}{% endif %}
+# The log file is placed next to the binary and needs to be writable.
+ReadWritePaths={{ dero.lookup.paths.data }} {{ dero.lookup.paths.bin | path_join(dero.release | string, dero.lookup.pkg.daemon ~ '.log') }} {% if dero.lookup.paths.working != dero.lookup.paths.data %} {{ dero.lookup.paths.working }}{% endif %}
 
 # Hardening measures
 ####################

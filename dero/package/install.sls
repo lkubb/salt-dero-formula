@@ -107,6 +107,16 @@ Dero working dir is available:
     - group: {{ dero.lookup.group }}
     - mode: '0710'
 
+# To be able to limit writes to the log file only in the systemd unit,
+# it needs to exist before it is launched.
+Dero log file exissts:
+  file.managed:
+    - name: {{ dero.lookup.paths.bin | path_join(dero.release | string, dero.lookup.pkg.daemon ~ '.log') }}
+    - user: {{ dero.lookup.user }}
+    - group: {{ dero.lookup.group }}
+    - mode: '0600'
+    - replace: false
+
 Dero datadir is available:
   file.directory:
     - name: {{ dero.lookup.paths.data }}
