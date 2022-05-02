@@ -51,6 +51,7 @@
       "_settings": {
         "config": {
           "clog-level": 1,
+          "flog-level": 0,
           "debug": false
         },
         "release": 66,

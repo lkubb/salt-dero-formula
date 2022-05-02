@@ -7,6 +7,7 @@ dero:
   config:
     clog-level: 1
     debug: false
+    flog-level: 0
   release: 66
   service:
     requires_mount: []
