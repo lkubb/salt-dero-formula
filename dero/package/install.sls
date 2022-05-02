@@ -100,6 +100,13 @@ Dero service unit is installed:
     - makedirs: true
     - context: {{ {'dero': dero} | json }}
 
+Dero working dir is available:
+  file.directory:
+    - name: {{ dero.lookup.paths.working }}
+    - user: {{ dero.lookup.user }}
+    - group: {{ dero.lookup.group }}
+    - mode: '0710'
+
 Dero datadir is available:
   file.directory:
     - name: {{ dero.lookup.paths.data }}
