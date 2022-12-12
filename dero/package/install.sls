@@ -17,6 +17,19 @@ Salt can manage GPG:
       # the above does not work somehow
       - test -d /root/.gnupg
 
+Dero user/group is present:
+  user.present:
+    - name: {{ dero.lookup.user }}
+    - system: true
+    - usergroup: true
+
+Dero directory is present:
+  file.directory:
+    - name: {{ dero.lookup.paths.bin }}
+    - user: root
+    - group: {{ dero.lookup.rootgroup }}
+    - makedirs: true
+
 # there is another pubkey, but this one is used for releases atm
 Dero release signing pubkey file is present:
   file.managed:
@@ -38,6 +51,17 @@ Dero release signing pubkey is imported:
       - Dero release signing pubkey file is present
       - Salt can manage GPG
 
+Dero release hashes are available:
+  file.managed:
+    - name: /tmp/dero/hashes.txt.asc
+    - source: {{ dero.lookup.pkg.source_hash.format(dero.release) }}
+    - skip_verify: true
+
+{%- if "gpg.verified" not in salt %}
+
+# Ensure the following does not run without the key being present.
+# The official gpg modules are currently big liars and always report
+# `Yup, no worries! Everything is fine.`
 Dero release signing pubkey is actually present:
   module.run:
     - gpg.get_key:
@@ -45,32 +69,25 @@ Dero release signing pubkey is actually present:
     - require:
       - Dero release signing pubkey is imported
 
-Dero user/group is present:
-  user.present:
-    - name: {{ dero.lookup.user }}
-    - system: true
-    - usergroup: true
-
-Dero directory is present:
-  file.directory:
-    - name: {{ dero.lookup.paths.bin }}
-    - user: root
-    - group: {{ dero.lookup.rootgroup }}
-    - makedirs: true
-
-Dero release hashes are available:
-  file.managed:
-    - name: /tmp/dero/hashes.txt.asc
-    - source: {{ dero.lookup.pkg.source_hash.format(dero.release) }}
-    - skip_verify: true
-
 Dero release hashes are signed by Dero pubkey:
-  module.run:
-    - gpg.verify:
-      - filename: /tmp/dero/hashes.txt.asc
+  test.configurable_test_state:
+    - name: Check if the downloaded web vault archive has been signed by the author.
+    - changes: False
+    - result: >
+        __slot__:salt:gpg.verify(filename=/tmp/web-vault-{{ warden.version_web_vault }}.tar.gz,
+        signature=/tmp/web-vault-{{ warden.version_web_vault }}.tar.gz.asc).res
     - require:
       - Dero release hashes are available
       - Dero release signing pubkey is actually present
+{%- else %}
+
+Dero release hashes are signed by Dero pubkey:
+  gpg.verified:
+    - name: /tmp/dero/hashes.txt.asc
+    - signed_by_any: DED1FEF44297A15CAD9AE28318CDB3ED5E85D2D4
+    - require:
+      - Dero release hashes are available
+{%- endif %}
 
 Dero is installed:
   archive.extracted:
