@@ -57,7 +57,7 @@ Dero release hashes are available:
     - source: {{ dero.lookup.pkg.source_hash.format(dero.release) }}
     - skip_verify: true
 
-{%- if "gpg.verified" not in salt %}
+{%- if "gpg" not in salt["saltutil.list_extmods"]().get("states", []) %}
 
 # Ensure the following does not run without the key being present.
 # The official gpg modules are currently big liars and always report
