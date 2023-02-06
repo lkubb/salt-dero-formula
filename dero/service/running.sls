@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # vim: ft=sls
 
 {%- set tplroot = tpldir.split('/')[0] %}
@@ -8,7 +7,7 @@
 include:
   - {{ sls_package_install }}
 
-dero-service-running-service-running:
+Dero is running:
   service.running:
     - name: {{ dero.lookup.service.name }}
     - enable: True

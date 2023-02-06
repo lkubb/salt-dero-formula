@@ -1,5 +1,10 @@
-# -*- coding: utf-8 -*-
 # vim: ft=sls
+
+{#-
+    Removes the dero package.
+    Has a dependency on `dero.service.clean`_.
+    Blockchain data will be left.
+#}
 
 {%- set tplroot = tpldir.split('/')[0] %}
 {%- set sls_service_clean = tplroot ~ '.service.clean' %}
