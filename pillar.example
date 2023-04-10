@@ -57,6 +57,6 @@ dero:
       # The entries under `source_files` are prepended to the default source files
       # given for the state
     source_files:
-      dero-config-file-file-managed:
+      Dero configuration is managed:
         - 'example_alt.tmpl'
         - 'example_alt.tmpl.jinja'

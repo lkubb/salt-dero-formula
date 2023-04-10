@@ -1,7 +1,6 @@
-# -*- coding: utf-8 -*-
 # vim: ft=sls
 
-{%- set tplroot = tpldir.split('/')[0] %}
+{%- set tplroot = tpldir.split("/")[0] %}
 {%- from tplroot ~ "/map.jinja" import mapdata as dero with context %}
 {%- from tplroot ~ "/libtofs.jinja" import files_switch with context %}
 
@@ -92,9 +91,9 @@ Dero release hashes are signed by Dero pubkey:
 Dero is installed:
   archive.extracted:
     - name: {{ dero.lookup.paths.bin | path_join(dero.release | string) }}
-    - source: {{ dero.lookup.pkg.source.format(dero.release, dero.lookup.pkg.name | replace('-', '_')) }}
+    - source: {{ dero.lookup.pkg.source.format(dero.release, dero.lookup.pkg.name | replace("-", "_")) }}
     - source_hash: /tmp/dero/hashes.txt.asc
-    - source_hash_name: 'SHA512 ({{ dero.lookup.pkg.name | replace('-', '_') }}.tar.gz) ='
+    - source_hash_name: 'SHA512 ({{ dero.lookup.pkg.name | replace("-", "_") }}.tar.gz) ='
     - user: {{ dero.lookup.user }}
     - group: {{ dero.lookup.group }}
     # 2 levels are needed to just dump the files
@@ -109,13 +108,13 @@ Dero is installed:
 Dero service unit is installed:
   file.managed:
     - name: /etc/systemd/system/{{ dero.lookup.service.name }}.service
-    - source: {{ files_switch(['derod.service', 'derod.service.j2']) }}
+    - source: {{ files_switch(["derod.service", "derod.service.j2"]) }}
     - template: jinja
     - mode: '0644'
     - user: root
     - group: {{ dero.lookup.rootgroup }}
     - makedirs: true
-    - context: {{ {'dero': dero} | json }}
+    - context: {{ {"dero": dero} | json }}
 
 Dero working dir is available:
   file.directory:
@@ -128,7 +127,7 @@ Dero working dir is available:
 # it needs to exist before it is launched.
 Dero log file exists:
   file.managed:
-    - name: {{ dero.lookup.paths.bin | path_join(dero.release | string, dero.lookup.pkg.daemon ~ '.log') }}
+    - name: {{ dero.lookup.paths.bin | path_join(dero.release | string, dero.lookup.pkg.daemon ~ ".log") }}
     - user: {{ dero.lookup.user }}
     - group: {{ dero.lookup.group }}
     - mode: '0600'

@@ -1,6 +1,6 @@
 {
   "template": "https://github.com/lkubb/salt-template-formula",
-  "commit": "c33be7342f32db2e215f929e5a51a690ed445c11",
+  "commit": "a63c03d95375f235c2d4a6159a26ae48d4fdc40b",
   "checkout": null,
   "context": {
     "cookiecutter": {
@@ -25,7 +25,7 @@
       "subcomponent": "",
       "subcomponent_config": "",
       "git_username": "lkubb",
-      "_lookup": {
+      "lookup": {
         "paths": {
           "bin": "/opt/dero",
           "data": "/var/lib/derod",
@@ -48,7 +48,7 @@
           "source_hash": "https://github.com/deroproject/derohe/releases/download/Release{}/checksum.txt.asc"
         }
       },
-      "_settings": {
+      "settings": {
         "config": {
           "clog-level": 1,
           "flog-level": 0,
