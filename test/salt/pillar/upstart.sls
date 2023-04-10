@@ -13,18 +13,17 @@ dero:
       bin: /opt/dero
       data: /var/lib/derod
       working: /var/lib/derod
+    pip_gnupg: python-gnupg
     pkg:
       daemon: derod-linux-amd64
       explorer: explorer-linux-amd64
       miner: dero-miner-linux-amd64
       name: dero-linux-amd64
-      required:
-        - gpg
-        - python-gnupg
       simulator: simulator-linux-amd64
       source: https://github.com/deroproject/derohe/releases/download/Release{}/{}.tar.gz
       source_hash: https://github.com/deroproject/derohe/releases/download/Release{}/checksum.txt.asc
       wallet: dero-wallet-cli-linux-amd64
+    pkg_gnupg: gpg
     user: dero
   config:
     clog-level: 1

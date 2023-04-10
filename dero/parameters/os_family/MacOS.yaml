@@ -19,8 +19,6 @@ values:
       explorer: explorer-darwin
       miner: dero-miner-darwin
       name: dero_darwin_universal
-      required:
-        - gpg
       simulator: simulator-darwin
       wallet: dero-wallet-cli-darwin
 ...

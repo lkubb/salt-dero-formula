@@ -33,6 +33,8 @@
         },
         "user": "dero",
         "group": "dero",
+        "pip_gnupg": "python-gnupg",
+        "pkg_gnupg": "gpg",
         "pkg": {
           "name": "dero-linux-amd64",
           "daemon": "derod-linux-amd64",
@@ -40,10 +42,6 @@
           "wallet": "dero-wallet-cli-linux-amd64",
           "explorer": "explorer-linux-amd64",
           "simulator": "simulator-linux-amd64",
-          "required": [
-            "gpg",
-            "python-gnupg"
-          ],
           "source": "https://github.com/deroproject/derohe/releases/download/Release{}/{}.tar.gz",
           "source_hash": "https://github.com/deroproject/derohe/releases/download/Release{}/checksum.txt.asc"
         }

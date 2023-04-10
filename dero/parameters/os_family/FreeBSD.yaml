@@ -1,4 +1,14 @@
 # vim: ft=yaml
+#
+# Set values specific to:
+#   salt['config.get']('os_family') == FreeBSD.
+#
+# You just need to add the key:values for this `os_family` that differ
+# from `defaults.yaml` + `<osarch>.yaml`.
+#
+# If you do not need to provide defaults via the `os_family` config,
+# you can remove this file or provide at least an empty dict, e.g.
+# values: {}
 ---
 values:
   lookup:
@@ -9,9 +19,7 @@ values:
       explorer: explorer-freebsd-amd64
       miner: dero-miner-freebsd-amd64
       name: dero-freebsd-amd64
-      required:
-        - gpg2
-        - py-gnupg
       simulator: simulator-freebsd-amd64
       wallet: dero-wallet-cli-freebsd-amd64
+    pkg_gnupg: gpg2
 ...

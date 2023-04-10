@@ -5,9 +5,11 @@
 {%- from tplroot ~ "/libtofs.jinja" import files_switch with context %}
 
 Salt can manage GPG:
-  # make sure gpg and python-gpg are available
+  # make sure gpg and python-gnupg are available
   pkg.installed:
-    - pkgs: {{ dero.lookup.pkg.required | json }}
+    - name: {{ dero.lookup.pkg_gnupg }}
+  pip.installed:
+    - name: {{ dero.lookup.pip_gnupg }}
   # needed to avoid exception when running gpg.get_key in unless below
   cmd.run:
     - name: gpg --list-keys
