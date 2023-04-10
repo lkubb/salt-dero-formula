@@ -30,7 +30,7 @@ dero:
     clog-level: 1
     debug: false
     flog-level: 0
-  release: 66
+  release: 117
   service:
     requires_mount: []
     wants: []
