@@ -2,7 +2,7 @@
 
 {%- set tplroot = tpldir.split("/")[0] %}
 {%- from tplroot ~ "/map.jinja" import mapdata as dero with context %}
-{%- from tplroot ~ "/libtofs.jinja" import files_switch with context %}
+{%- from tplroot ~ "/libtofsstack.jinja" import files_switch with context %}
 
 Salt can manage GPG:
   # make sure gpg and python-gnupg are available
@@ -110,7 +110,12 @@ Dero is installed:
 Dero service unit is installed:
   file.managed:
     - name: /etc/systemd/system/{{ dero.lookup.service.name }}.service
-    - source: {{ files_switch(["derod.service", "derod.service.j2"]) }}
+    - source: {{ files_switch(
+                    ["derod.service", "derod.service.j2"],
+                    config=dero,
+                    lookup="Dero service unit is installed",
+                 )
+              }}
     - template: jinja
     - mode: '0644'
     - user: root
